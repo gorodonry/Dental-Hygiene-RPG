@@ -1,15 +1,13 @@
 ##
-# battle_sequence_option_1.py
-# Date: 08/09/2021
+# battle_sequence_option_3.py
+# Date: 09/09/2021
 # Author: Ryan Gordon
-# Option 1 of dental RPG for the battle sequence
+# Option 3 of dental RPG for the battle sequence
 
 '''
-Battle sequence option 1
+Battle sequence option 2
 
-Option 1 for the battle sequence. This option lets the user input the attack as
-a letter (with the option of typing out the entire attack), and prints out
-dental hygiene messages as the battle progresses.
+*description
 '''
 
 import random
@@ -18,7 +16,8 @@ from time import sleep
 from opponent import Opponent
 from player import Player
 from print_options import print_slow
-from constants import WEAKNESSES, BASE_DAMAGE, STRENGTHS, ATTACK_MESSAGES
+from constants import WEAKNESSES, BASE_DAMAGE, STRENGTHS, ATTACK_MESSAGES, \
+     BATTLE_END_MESSAGES
 
 
 def print_prelude():
@@ -58,41 +57,41 @@ def battle(stage, user, start=None):
     param stage (int): determines the possible level of the opponents.
     """
     enemy = Opponent(stage)
-    if start is None:
-        turn = random.choice(["user", "computer"])
-    else:
-        turn = start
+    turn = random.choice(["user", "computer"]) if start is None else start
     # Loop until one or the other of the combatants is defeated
     while enemy.get_status() and user.get_status():
         print_slow(f"""
-Enemy health: {enemy.health}
-Your health: {user.health}""", '\n\n')
+Remaining enemy hits: {enemy.health}
+Your remaining hits: {user.health}""", '\n\n')
         if turn == "user":
             # User turn
             print_slow("Your turn...", '\n\n')
             sleep(1)
-            attack = user.get_attack(1)
+            attack = user.get_attack(3)
             sleep(1)
             # Determine relative effectiveness and with it damage
+            print()
+            print_slow(f"You chose {attack}.")
+            sleep(1)
             print_slow(ATTACK_MESSAGES[attack])
             sleep(1)
             if enemy.name in WEAKNESSES[attack]:
                 # If the attack is effective against the enemy
                 base_damage = ceil(BASE_DAMAGE * 1.5)
                 damage = random.randint(base_damage - 1, base_damage + 4)
-                print_slow("""
-It's super effective [""" + str(damage) + " damage]!")
+                print_slow(f"""
+It does a lot of damage ({damage})!""")
             elif enemy.name in STRENGTHS[attack]:
                 # If the attack is weak against the enemy
                 base_damage = ceil(BASE_DAMAGE / 1.5)
                 damage = random.randint(base_damage - 4, base_damage + 1)
-                print_slow("""
-It isn't very effective [""" + str(damage) + " damage]!")
+                print_slow(f"""
+The {enemy.name} hardly notices your attack... maybe not the right one..?""")
             else:
                 # If the enemy is neutral to the attack
                 damage = random.randint(BASE_DAMAGE - 2, BASE_DAMAGE + 2)
-                print_slow("""
-The enemy manages to shake it off [""" + str(damage) + " damage].")
+                print_slow(f"""
+It does a bit of damage ({damage}).""")
             enemy.take_damage(damage)
         else:
             # Opponent turn
@@ -111,29 +110,36 @@ The enemy manages to shake it off [""" + str(damage) + " damage].")
             if effect is None:
                 # If user is neutral to the attack
                 damage = random.randint(BASE_DAMAGE - 2, BASE_DAMAGE + 2)
-                print_slow("""
-You manage to shake it off [""" + str(damage) + " damage].")
+                print_slow(f"""
+It's just a flesh wound ({damage}).""")
             elif effect is True:
                 # If the attack is effective against the user
                 base_damage = ceil(BASE_DAMAGE * 1.5)
                 damage = random.randint(base_damage - 1, base_damage + 4)
-                print_slow("""
-It's super effective [""" + str(damage) + " damage]!")
+                print_slow(f"""
+Youch! {damage} hits...""")
             else:
                 # If the attack is weak against the user
                 base_damage = ceil(BASE_DAMAGE / 1.5)
                 damage = random.randint(base_damage - 4, base_damage + 1)
                 print_slow("""
-It isn't very effective [""" + str(damage) + " damage]!")
+Did they just attack? All that for no effect...""")
             user.take_damage(damage)
             sleep(1)
         # Alternate the attacks
         turn = "user" if turn == "computer" else "computer"
+    print()
+    if user.get_status():
+        print_slow("Victory!")
+        sleep(1)
+        print_slow(BATTLE_END_MESSAGES[enemy.name])
+    else:
+        print_slow("Oof. You died...")
     return user
 
 if __name__ == "__main__":
     # Print the prelude before creating a character
-    print_prelude()
+    #print_prelude()
     user = Player()
     print("\n")
     # Fight a battle against a level 1 monster with no context
