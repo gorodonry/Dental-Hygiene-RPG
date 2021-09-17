@@ -14,16 +14,16 @@ OPPONENTS = {"Plaque Monster": (55, 2),
              "L&P": (25, 1)}
 
 # Dictionary of which level monsters can occur at which stages
-STAGES = {1: tuple([1]), 2: (1, 2), 3: tuple([2]), 4: (2, 3)}
+STAGES = {1: (1,), 2: (1, 2), 3: (2,), 4: (2, 3)}
 
 # List attacks and opponents that can use them
-BAD_BRUSHING_SCHEDULE = tuple(["Sugarholic Teeth"])
+BAD_BRUSHING_SCHEDULE = ("Sugarholic Teeth",)
 CANDY_CORN = ("Candy Corn", "Sugarholic Teeth", "Rotten Tooth")
 BAD_BREATH = ("Sugarholic Teeth", "Rotten Tooth", "Plaque Monster")
 PLAQUE = ("Plaque Monster", "Sugarholic Teeth", "Rotten Tooth", "Holey Tooth")
 SUGAR = ("Sugarholic Teeth", "Candy Corn", "L&P", "Rotten Tooth")
 GUM_DISEASE = ("Plaque Monster", "Sugarholic Teeth")
-TOFFEE = tuple(["Chipped Tooth"])
+TOFFEE = ("Chipped Tooth",)
 
 # Key order is important when determining attack effectiveness
 SPECIFIC_MOB_ATTACKS = {"bad brushing schedule": BAD_BRUSHING_SCHEDULE,
@@ -33,6 +33,41 @@ SPECIFIC_MOB_ATTACKS = {"bad brushing schedule": BAD_BRUSHING_SCHEDULE,
                         "sugar": SUGAR,
                         "gum disease": GUM_DISEASE,
                         "toffee": TOFFEE}
+
+# Information about the effect of certain user attacks, .split() at asterisks
+ATTACK_HELP = {"blended kale": """
+Blended kale (/blɛndɪd keɪl/, noun, pl. blended kale)*
+Food can't get much better for your teeth than this. Way better than candy corn
+that's for sure. Encourage your patients to eat this whenever possible.""",
+               "scaler": """
+Scaler (/skeɪlɑ/, noun, pl. scalers)*
+Your patients probably know this as 'the scrapey tool'. We know it simply can't
+be beaten when it comes to getting rid of plaque buildups.""",
+               "dental floss": """
+Dental floss (/ˈdɛnt(ə)l flɒs/, noun, pl. dental floss)*
+Not many people use this nowadays, but its power isn't to be underestimated all
+the same. Looks like tough green string, very good for clearing stuck food from
+between your teeth. Recommend patients use daily, night is best. A preventative
+measure up there with toothpaste. Rumour has it it's most effective against any
+teeth not yet feeling the consequences of a sugary diet.""",
+               "toothpaste": """
+Toothpaste (/ˈtuːθpeɪst/, noun, pl. toothpastes)*
+Used twice a day, emphasis on night. Brush teeth with it to get rid of constant
+film of plaque that forms on teeth. A preventative measure most useful for foes
+not currently experiencing tooth decay, but about to.""",
+               "drill": """
+Drill (/drɪl/, noun, pl. drills)*
+Used for cutting away part of a tooth prior to filling it. Local anaesthetic is
+recommended, but not necessary.""",
+               "fluoridated water": """
+Fluoridated water (/ˈflʊərɪdeɪtɪd ˈwɔːtə/, noun, pl. fluoridated water)*
+Drinking water laced with fluoride. Present in most towns and cities of NZ with
+exceptions rapidly disappearing. The simplest preventative measure there is for
+tooth decay, people don't even notice it's there. Good for everything.""",
+               "dental pamphlet": """
+Dental pamphlet (/ˈdɛnt(ə)l ˈpamflɪt/, noun, pl. dental pamphlets)*
+Some things are just too hard to cure on the spot. Like broken teeth. Direct to
+a dentist with a studio ASAP."""}
 
 # Messages printed after an attack choice by either the user or opponent
 ATTACK_MESSAGES = {"bad brushing schedule": """
@@ -53,7 +88,7 @@ build-up of food on you.""",
                    "toffee": """
 A spirited attempt to break your teeth with solid food...""",
                    "blended kale": """
-You chuck something healthy at them - this won't damage their teeth!""",
+You chuck something healthy at them.""",
                    "scaler": """
 You assail their plaque and try to get rid of it!""",
                    "dental floss": """
@@ -73,28 +108,30 @@ The best thing for them is to visit a dentist."""}
 BATTLE_END_MESSAGES = {"Plaque Monster": """
 Getting rid of the plaque with a scaler proved immensely successful.""",
                        "Holey Tooth": """
-Good job repairing those fillings.""",
+Good job repairing those fillings with that drill.""",
                        "Rotten Tooth": """
-Removal of the plaque build-up and the prevetion of further decay with fluoride
-in the water was an excellent idea.""",
+Removing their plaque with a scaler and converting them to fluoridated water is
+the way to go!""",
                        "Chipped Tooth": """
-The best thing for them was indeed to visit the dentist.""",
+The best thing for them was to visit a dentist. Only so much you can do without
+the proper equipment...""",
                        "Sugarholic Teeth": """
-A fearsome enemy - but in the end only the preventative classics toothpaste and
-dental floss were necessary.""",
+A fearsome enemy - one convinced that sugar is amazing, but not yet feeling the
+consequences... the preventative measures toothpaste and dental floss proved to
+be a success.""",
                        "Candy Corn": """
 My god that was a lot of sugar. Something healthier would be better...""",
                        "L&P": """
-Why would anyone need anything more than water and fluoride?"""}
+Why would anyone need anything more than water and fluoride..?"""}
 
 # Dictionaries of opponent weaknesses and strengths
-WEAKNESSES = {"blended kale": tuple(["Candy Corn"]),
+WEAKNESSES = {"blended kale": ("Candy Corn",),
               "scaler": ("Plaque Monster", "Rotten Tooth"),
-              "dental floss": tuple(["Sugarholic Teeth"]),
-              "toothpaste": tuple(["Sugarholic Teeth"]),
-              "drill": tuple(["Holey Tooth"]),
+              "dental floss": ("Sugarholic Teeth",),
+              "toothpaste": ("Sugarholic Teeth",),
+              "drill": ("Holey Tooth",),
               "fluoridated water": ("L&P", "Rotten Tooth", "Sugarholic Teeth"),
-              "dental pamphlet": tuple(["Chipped Tooth"])}
+              "dental pamphlet": ("Chipped Tooth",)}
 
 STRENGTHS = {"blended kale": ("Rotten Tooth", "Sugarholic Teeth"),
              "scaler": ("Candy Corn", "L&P"),
@@ -102,7 +139,7 @@ STRENGTHS = {"blended kale": ("Rotten Tooth", "Sugarholic Teeth"),
              "toothpaste": ("Holey Tooth", "Chipped Tooth"),
              "drill": ("Candy Corn", "L&P", "Sugarholic Teeth"),
              "fluoridated water": (),
-             "dental pamphlet": tuple(["Plaque Monster"])}
+             "dental pamphlet": ("Plaque Monster",)}
 
 # For both the user and the computer opponent
 BASE_DAMAGE = 10
@@ -112,10 +149,7 @@ AVAILABLE_EFFECTS = (True, True, None, None, None, False, False)
 
 # One of these names is chosen if the user enters '' for a name
 NULL_NAMES = ("Nada", "Nothing", "Null", "Zilch", "Naught", "Fred", "Bob",
-              "Kat")
+              "Kat", "Spode", "Ogg", "Mabel", "Arthur")
 
 # List of three options users can choose from when choosing character traits
 VALID_STATS = {"g": "good", "b": "bad", "m": "meh"}
-
-# Used for some user inputs/menus
-ALPHABET = tuple("abcdefghijklmnopqrstuvwxyz")

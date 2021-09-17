@@ -9,7 +9,7 @@ from math import ceil
 from time import sleep
 from print_options import print_slow
 from constants import VALID_STATS, NULL_NAMES, AVAILABLE_EFFECTS, OPPONENTS, \
-     SPECIFIC_MOB_ATTACKS, WEAKNESSES, ALPHABET
+     SPECIFIC_MOB_ATTACKS, WEAKNESSES, ATTACK_HELP
 
 
 def get_stat(prompt, stats):
@@ -28,7 +28,7 @@ def get_stat(prompt, stats):
             except KeyError:
                 print("Does that really look like one of the options to you?")
         # Users cannot be either good or bad at everything
-        elif stats.count(ans) == 2 and ans != "meh":
+        if stats.count(ans) == 2 and ans != "meh":
             print(f"You can't be {ans} at everything!")
     return ans
 
@@ -52,6 +52,17 @@ def get_effect(available, stat=None):
         return random.choice(available)
 
 
+def print_attacks(attacks):
+    """Prints out available user attacks. Returns number of attacks."""
+    print("Equipment in your backpack:")
+    for attack in attacks:
+        option = attacks.index(attack)
+        print(f"({option + 1}) {attack}")
+    # Typing help or the corresponding number gives information on attacks
+    print(f"({option + 2}) help")
+    return option
+
+
 class Player:
     """Creates an object that contains all the player's information."""
 
@@ -69,6 +80,13 @@ class Player:
         self.name = input("Name: ").strip()
         if self.name == "":
             self.name = random.choice(NULL_NAMES)
+            sleep(1)
+            print_slow("You need a name to enter. ")
+            sleep(1)
+            print_slow("We have decided you shall henceforth be known as:", '')
+            sleep(1)
+            print_slow(f" {self.name}.")
+            sleep(1)
 
         # Get self discipline, agility, and teeth strength as good/bad/meh
         self.stats = {}
@@ -128,55 +146,78 @@ class Player:
         """Adds a new attack to the player's arsenal."""
         self.attacks.append(attack)
 
-    def get_attack(self, option=None):
+    def get_attack(self, enemy):
         """Asks user to choose an attack and returns the answer."""
-        # Interface used in the final product
-        if option is None:
-            'placeholder'
-        # Interface for battle sequence option 1
-        elif option == 1:
-            # Print out options
-            print("Your attacks:")
-            options = {}
-            for attack in self.attacks:
-                option = ALPHABET[self.attacks.index(attack)]
-                print(f"{attack} - {option.upper()}")
-                options[option] = attack
-            attack = ""
-            # Determine the attack
-            while attack not in list(options.keys()) + list(options.values()):
-                attack = input("How are you going to tackle your opponent? ")
-                attack = attack.strip().lower()
-                if attack not in list(options.keys()) + list(options.values()):
-                    print("Unfortunately, that isn't an option.")
-            if attack in options.keys():
-                attack = options[attack]
-        # Interface for battle sequence option 2
-        elif option == 2:
-            # Print out options
-            print("Available weapons:")
-            for attack in self.attacks:
-                option = self.attacks.index(attack)
-                print(f"({option + 1}) {attack}")
-            attack = ""
-            # Determine the attack
-            while attack not in self.attacks:
-                attack = input("Choose your weapon: ").strip().lower()
-                if attack not in self.attacks:
-                    try:
-                        attack = self.attacks[int(attack) - 1]
-                    except ValueError:
-                        print("Not currently in your arsenal.")
-        # Interface for battle sequence option 3
-        else:
-            # Print out options
-            print(f"Equipment in your backpack: {', '.join(self.attacks)}.")
-            attack = ""
-            # Determine the attack
-            while attack not in self.attacks:
-                attack = input("What are you going to use? ")
-                if attack not in self.attacks:
-                    print("Try using something from your backpack...")
+        # Print out options
+        option = print_attacks(self.attacks)
+        attack = ""
+        # Determine the attack, check for validity
+        while attack not in self.attacks:
+            # If they asked for help with the attacks, print the attacks again
+            if attack in ("help", str(option + 2)):
+                option = print_attacks(self.attacks)
+            attack = input("How will you tackle your enemy? ").strip().lower()
+            # If the user wants information on an attack or two
+            if attack in ("help", str(option + 2)):
+                print_slow("""
+You wave the monster down. 'Just give me a minute to consult my dental handbook
+please...'""")
+                sleep(1)
+                print("\n(Press enter to put the handbook down.)")
+                attack_help = " "
+                # Loop until the user hits enter, means they want to attack
+                while attack_help != "":
+                    # Ask for the attack to help with
+                    attack_help = input("What attack do you want to look up? ")
+                    attack_help = attack_help.strip().lower()
+                    # If the attack was likely entered as a number, convert it
+                    if attack_help not in self.attacks and attack_help != "":
+                        try:
+                            attack_help = int(attack_help) - 1
+                            if attack_help >= 0:
+                                # If the requirements are satisfied, print help
+                                attack_help = self.attacks[attack_help]
+                                message = ATTACK_HELP[attack_help].split("*")
+                                print_slow(message[0], '')
+                                sleep(1)
+                                print_slow(message[1], gap=0.015)
+                                sleep(1)
+                                print()
+                            else:
+                                print("You seem unable to find the entry...")
+                        except ValueError:
+                            print(f"There's no entry for {attack_help}...")
+                        except IndexError:
+                            print("You seem unable to find the entry...")
+                    elif attack_help != "":
+                        # If the requirements are satisfied, print help
+                        message = ATTACK_HELP[attack_help].split("*")
+                        print_slow(message[0], '')
+                        sleep(1)
+                        print_slow(message[1], gap=0.015)
+                        sleep(1)
+                        print()
+                    else:
+                        # User is exiting the help menu
+                        print_slow("""
+You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
+                        sleep(1)
+                        print()
+                        print_slow(f"The {enemy} glares at you.")
+                        sleep(1)
+                        print()
+            # If the attack was likely entered as a number, convert it
+            elif attack not in self.attacks:
+                try:
+                    attack = int(attack) - 1
+                    if attack >= 0:
+                        attack = self.attacks[attack]
+                    else:
+                        print("That doesn't correspond to anything...")
+                except ValueError:
+                    print("Not currently in your arsenal.")
+                except IndexError:
+                    print("That doesn't correspond to anything...")
         return attack
 
     def get_status(self):
