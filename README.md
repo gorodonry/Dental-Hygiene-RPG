@@ -1,3 +1,3 @@
 # Dental-Hygiene-RPG
 
-This is a basic RPG game where you play a dental health advocate and attempt to defeat the monsters causing bad dental hygiene. The game is set in a typical RPG land/kingdom, but with minimal character creation as this is only a simple game.
+The kingdom is in turmoil – dental aberrations are running amok! Nobody quite knows why, and nobody knows who is responsible, but nobody is safe while they’re around. Fight your way through various enemies until you meet the one orchestrating it all…
