@@ -42,18 +42,45 @@ class Opponent:
             if self.name in SPECIFIC_MOB_ATTACKS[attack]:
                 self.attacks.append(attack)
 
+        self.extra_damage = 0
+        self.damage_adjust = 1
+
         # Print encounter message
         print_slow("You have encountered: ", '')
         sleep(1)
         print_slow(self.name + "!")
 
-    def add_attack(self, attack):
-        """Adds a new attack to an opponent."""
-        self.attacks.append(attack)
+    def evolve(self):
+        """
+        Evolves the opponent.
+
+        Evolve refers to either adding a new attack (default), or increasing
+        attack damage slightly if arsenal is full.
+
+        return (str/bool): False if arsenal was full before evolution, else
+            the newly added attack.
+        """
+        if len(self.attacks) == 7:
+            self.extra_damage += 1
+            return False
+        else:
+            available = list(SPECIFIC_MOB_ATTACKS.keys())
+            for attack in self.attacks:
+                available.remove(attack)
+            self.attacks.append(random.choice(available))
+            return self.attacks[-1]
 
     def get_attack(self):
         """Chooses a random attack and returns it."""
         return random.choice(self.attacks)
+
+    def adjust_damage(self, amount):
+        """Adjust opponent damage by specified factor."""
+        self.damage_adjust += amount
+
+    def reset_damage_adjust(self):
+        """Resets opponent damage to normal."""
+        self.damage_adjust = 1
 
     def get_status(self):
         """Returns True if alive, False is dead."""

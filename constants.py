@@ -88,7 +88,7 @@ build-up of food on you.""",
                    "toffee": """
 A spirited attempt to break your teeth with solid food...""",
                    "blended kale": """
-You chuck something healthy at them.""",
+You chuck something healthy at them - far better than what they're eating!""",
                    "scaler": """
 You assail their plaque and try to get rid of it!""",
                    "dental floss": """

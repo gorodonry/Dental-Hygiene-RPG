@@ -10,6 +10,7 @@ from time import sleep
 from print_options import print_slow
 from constants import VALID_STATS, NULL_NAMES, AVAILABLE_EFFECTS, OPPONENTS, \
      SPECIFIC_MOB_ATTACKS, WEAKNESSES, ATTACK_HELP
+import sys
 
 
 def get_stat(prompt, stats):
@@ -52,12 +53,16 @@ def get_effect(available, stat=None):
         return random.choice(available)
 
 
-def print_attacks(attacks):
+def print_attacks(attacks, compromised):
     """Prints out available user attacks. Returns number of attacks."""
     print("Equipment in your backpack:")
     for attack in attacks:
         option = attacks.index(attack)
-        print(f"({option + 1}) {attack}")
+        # Compromised attacks are printed in red
+        if attack not in compromised:
+            print(f"({option + 1}) {attack}")
+        else:
+            sys.stderr.write(f"({option + 1}) {attack}\n")
     # Typing help or the corresponding number gives information on attacks
     print(f"({option + 2}) help")
     return option
@@ -81,11 +86,11 @@ class Player:
         if self.name == "":
             self.name = random.choice(NULL_NAMES)
             sleep(1)
-            print_slow("You need a name to enter. ")
+            print_slow("You need a name to enter.")
             sleep(1)
-            print_slow("We have decided you shall henceforth be known as:", '')
+            print_slow("We have decided you shall henceforth be known as ", '')
             sleep(1)
-            print_slow(f" {self.name}.")
+            print_slow(f"{self.name}.")
             sleep(1)
 
         # Get self discipline, agility, and teeth strength as good/bad/meh
@@ -142,6 +147,12 @@ class Player:
                     if opponent in WEAKNESSES[weakness]:
                         self.attacks.append(weakness)
 
+        self.extra_damage = 0
+        self.damage_adjust = 1
+
+        # During a battle, attacks can stop working due to a random event
+        self.compromised_attacks = []
+
     def add_attack(self, attack):
         """Adds a new attack to the player's arsenal."""
         self.attacks.append(attack)
@@ -149,13 +160,13 @@ class Player:
     def get_attack(self, enemy):
         """Asks user to choose an attack and returns the answer."""
         # Print out options
-        option = print_attacks(self.attacks)
+        option = print_attacks(self.attacks, self.compromised_attacks)
         attack = ""
         # Determine the attack, check for validity
-        while attack not in self.attacks:
+        while attack not in self.attacks or attack in self.compromised_attacks:
             # If they asked for help with the attacks, print the attacks again
             if attack in ("help", str(option + 2)):
-                option = print_attacks(self.attacks)
+                option = print_attacks(self.attacks, self.compromised_attacks)
             attack = input("How will you tackle your enemy? ").strip().lower()
             # If the user wants information on an attack or two
             if attack in ("help", str(option + 2)):
@@ -202,8 +213,7 @@ please...'""")
                         print_slow("""
 You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
                         sleep(1)
-                        print()
-                        print_slow(f"The {enemy} glares at you.")
+                        print_slow(f"\nThe {enemy} glares at you.")
                         sleep(1)
                         print()
             # If the attack was likely entered as a number, convert it
@@ -218,7 +228,30 @@ You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
                     print("Not currently in your arsenal.")
                 except IndexError:
                     print("That doesn't correspond to anything...")
+            if attack in self.compromised_attacks:
+                print("You reach for it but it isn't working...")
         return attack
+
+    def compromise(self, attack=None):
+        """Adds an attack to the compromised attacks list."""
+        # Compromise either a specified or a random attack
+        if attack is None:
+            self.compromised_attacks.append(random.choice(self.attacks))
+        else:
+            self.compromised_attacks.append(attack)
+        return self.compromised_attacks[-1]
+
+    def uncompromise_all_attacks(self):
+        """Uncompromises all player attacks."""
+        self.compromised_attacks = []
+
+    def adjust_damage(self, amount):
+        """Adjust user damage by specified factor."""
+        self.damage_adjust += amount
+
+    def reset_damage_adjust(self):
+        """Resets user damage to normal."""
+        self.damage_adjust = 1
 
     def get_status(self):
         """Returns True if alive, False is dead."""
@@ -232,8 +265,10 @@ You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
         """Increases health by specified amount (up to the max)."""
         if self.health + amount >= self.max_health:
             self.health = self.max_health
+            return None
         else:
             self.health += amount
+            return amount
 
     def heal_full(self):
         """Restores user to max health."""
@@ -242,3 +277,7 @@ You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
     def increase_max_health(self, amount):
         """Increases max health by specified amount."""
         self.max_health += amount
+
+    def increase_attack_damage(self, amount):
+        """Increases attack damage by specified amount."""
+        self.extra_damage += amount
