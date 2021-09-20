@@ -39,7 +39,7 @@ The mist stirs ahead of you... and suddenly you can see it - """, '')
 
 if __name__ == "__main__":
     # Print prelude to character creation, then create the character
-    #print_prelude()
+    print_prelude()
     user = Player()
     sleep(1)
     print("\n\n")
