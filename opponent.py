@@ -47,7 +47,6 @@ class Opponent:
 
         # Print encounter message
         print_slow("You have encountered: ", '')
-        sleep(1)
         print_slow(self.name + "!")
 
     def evolve(self):

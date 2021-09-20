@@ -149,7 +149,10 @@ AVAILABLE_EFFECTS = (True, True, None, None, None, False, False)
 
 # One of these names is chosen if the user enters '' for a name
 NULL_NAMES = ("Nada", "Nothing", "Null", "Zilch", "Naught", "Fred", "Bob",
-              "Kat", "Spode", "Ogg", "Mabel", "Arthur")
+              "Kat", "Spode", "Ogg", "Mabel", "Arthur", "Trevor")
 
 # List of three options users can choose from when choosing character traits
 VALID_STATS = {"g": "good", "b": "bad", "m": "meh"}
+
+# Valid route choices during the game
+FOREST_ROUTES = {"1": "main road", "2": "fens"}

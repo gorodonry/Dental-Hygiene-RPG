@@ -17,34 +17,29 @@ def evolve_monster():
     """Adds an attack to the monsters arsenal and prints context."""
     attack = enemy.evolve()
     print_slow(f"Something's happening to the {enemy.name}... ", '')
-    sleep(1)
     print_slow("it appears to be evolving!")
-    sleep(1)
     print()
     if attack:
         print_slow(f"It's developed another attack: {attack}...")
     else:
         print_slow("The incoming attack looks deadlier to your trained eye...")
-    sleep(3)
+    sleep(2)
 
 
 def compromise_attack():
     """Compromises a users attack and prints context."""
     attack = user.compromise()
     print_slow(f"Plaque have taken down your {attack}!")
-    sleep(1)
     print()
     print_slow("You quickly cleanse it - should be working again next time...")
-    sleep(3)
+    sleep(2)
 
 
 def find_toothbrush():
     """Heals user slightly and prints context."""
     amount = user.heal(random.randint(5, 8))
     print_slow("There's something in your pocket... ", '')
-    sleep(1)
     print_slow("it's a manual toothbrush!")
-    sleep(1)
     if amount is not None:
         print_slow(f"\nYou give your teeth a quick clean (healed {amount}hp).")
     else:
@@ -52,7 +47,7 @@ def find_toothbrush():
         print_slow("""
 You're feeling stronger than ever after giving your teeth a quick clean (attack
 damage increased by 1).""")
-    sleep(3)
+    sleep(2)
 
 
 def gust():
@@ -60,14 +55,12 @@ def gust():
     if turn == "user":
         user.adjust_damage(1)
         print_slow("A gust of wind buffets you around!")
-        sleep(1)
         print_slow("\nDamage of your next attack reduced by half...")
     else:
         enemy.adjust_damage(1)
         print_slow(f"A gust of wind buffets the {enemy.name} around!")
-        sleep(1)
         print_slow("\nDamage of their next attack reduced by half...")
-    sleep(3)
+    sleep(2)
 
 
 def battle(stage, player, start=None):
@@ -92,21 +85,19 @@ def battle(stage, player, start=None):
     while enemy.get_status() and user.get_status():
         # If a random event takes place, print the event and apply its effect
         if random_event:
-            print_slow("\n--EVENT--")
+            print("\n--EVENT--")
             sleep(1)
             random.choice(RANDOM_EVENTS)()
+            print("---------")
         print_slow(f"""
 Enemy health: {enemy.health}
 Your health: {user.health}""", '\n\n')
         if turn == "user":
             # User turn
             print_slow("Your turn...", '\n\n')
-            sleep(1)
             attack = user.get_attack(enemy.name)
-            sleep(1)
             # Determine relative effectiveness and with it damage
             print_slow(ATTACK_MESSAGES[attack])
-            sleep(1)
             if enemy.name in WEAKNESSES[attack]:
                 # If the attack is effective against the enemy
                 base = ceil(BASE * 1.5) + user.extra_damage
@@ -136,22 +127,16 @@ It isn't very effective [{damage} damage]... maybe not the right attack..?""")
                 print_slow(f"""
 The {enemy.name} manages to shake it off [{damage} damage]. Hmmm...""")
             enemy.take_damage(damage)
-            sleep(1)
             # Reset temporary effects from random events
             user.uncompromise_all_attacks()
             user.reset_damage_adjust()
         else:
             # Opponent turn
-            print_slow(enemy.name + "'s turn...")
-            sleep(1)
-            print()
+            print_slow(f"{enemy.name}'s turn...")
             attack = enemy.get_attack()
-            print_slow(enemy.name + " uses ", '')
-            sleep(1)
+            print_slow(f"\n{enemy.name} uses ", '')
             print_slow(attack + ".")
-            sleep(1)
             print_slow(ATTACK_MESSAGES[attack])
-            sleep(1)
             # Determine relative effectiveness and with it damage
             effect = user.affected_by[attack]
             if effect is None:
@@ -176,7 +161,6 @@ It's super effective [{damage} damage]! Ouch ouch ouch...""")
                 print_slow(f"""
 It isn't very effective [{damage} damage]. Take that, {enemy.name}!""")
             user.take_damage(damage)
-            sleep(1)
             # Reset temporary effects from random events
             enemy.reset_damage_adjust()
         # Alternate the attacks and check for random event next round
@@ -186,10 +170,12 @@ It isn't very effective [{damage} damage]. Take that, {enemy.name}!""")
     print()
     if user.get_status():
         print_slow("Victory!")
-        sleep(1)
         print_slow(BATTLE_END_MESSAGES[enemy.name])
+        user.heal_full()
+        print_slow("""
+Following the battle you spend a couple of minutes with an electric toothbrush,
+thoroughly cleaning your teeth (restoration to max health).""")
     else:
         print_slow("You died...")
-    return user
 
 RANDOM_EVENTS = (evolve_monster, compromise_attack, find_toothbrush, gust)

@@ -7,7 +7,7 @@
 from time import sleep
 
 
-def print_slow(message, newline='\n', gap=0.01):
+def print_slow(message, newline='\n', gap=0.01, wait=1):
     """
     Prints a line one character at a time.
 
@@ -17,3 +17,4 @@ def print_slow(message, newline='\n', gap=0.01):
         print(character, end='')
         sleep(gap)
     print(end=newline)
+    sleep(wait)

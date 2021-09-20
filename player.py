@@ -75,9 +75,7 @@ class Player:
         """Initial setup of character."""
         # Start of character creation messages
         print_slow("Greetings applicant", '\n\n')
-        sleep(1)
         print_slow("We need some information about you.", '\n\n')
-        sleep(1)
 
         print("Guild application form\n")
 
@@ -87,11 +85,8 @@ class Player:
             self.name = random.choice(NULL_NAMES)
             sleep(1)
             print_slow("You need a name to enter.")
-            sleep(1)
             print_slow("We have decided you shall henceforth be known as ", '')
-            sleep(1)
             print_slow(f"{self.name}.")
-            sleep(1)
 
         # Get self discipline, agility, and teeth strength as good/bad/meh
         self.stats = {}
@@ -105,16 +100,11 @@ class Player:
         teeth_strength = get_stat(prompt, list(self.stats.values()))
         self.stats["teeth strength"] = teeth_strength
 
-        print()
-        print_slow("Thank you. ", '')
-        sleep(1)
+        print_slow("\nThank you. ", '')
         print_slow("But this is just writing. ", '')
-        sleep(1)
-        print_slow("""Prior to joining you must undergo a series of tests.""")
-        sleep(1)
+        print_slow("Prior to joining you must undergo a series of tests.")
         print()
         print_slow("The assessor shows you another door and steps back. ", '')
-        sleep(1)
         print_slow("You open it...")
 
         # End of character creation messages, create any remaining user vars
@@ -173,7 +163,6 @@ class Player:
                 print_slow("""
 You wave the monster down. 'Just give me a minute to consult my dental handbook
 please...'""")
-                sleep(1)
                 print("\n(Press enter to put the handbook down.)")
                 attack_help = " "
                 # Loop until the user hits enter, means they want to attack
@@ -190,9 +179,7 @@ please...'""")
                                 attack_help = self.attacks[attack_help]
                                 message = ATTACK_HELP[attack_help].split("*")
                                 print_slow(message[0], '')
-                                sleep(1)
                                 print_slow(message[1], gap=0.015)
-                                sleep(1)
                                 print()
                             else:
                                 print("You seem unable to find the entry...")
@@ -204,17 +191,13 @@ please...'""")
                         # If the requirements are satisfied, print help
                         message = ATTACK_HELP[attack_help].split("*")
                         print_slow(message[0], '')
-                        sleep(1)
                         print_slow(message[1], gap=0.015)
-                        sleep(1)
                         print()
                     else:
                         # User is exiting the help menu
                         print_slow("""
 You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
-                        sleep(1)
                         print_slow(f"\nThe {enemy} glares at you.")
-                        sleep(1)
                         print()
             # If the attack was likely entered as a number, convert it
             elif attack not in self.attacks:
