@@ -13,8 +13,10 @@ OPPONENTS = {"Plaque Monster": (55, 2),
              "Candy Corn": (35, 1),
              "L&P": (25, 1)}
 
+BOSSES = {"Bottle of coke": [80]}
+
 # Dictionary of which level monsters can occur at which stages
-STAGES = {1: (1,), 2: (1, 2), 3: (2,), 4: (2, 3)}
+STAGES = {1: (1,), 2: (1, 2), 3: (2,), 4: (2, 3), 5: (3,)}
 
 # List attacks and opponents that can use them
 BAD_BRUSHING_SCHEDULE = ("Sugarholic Teeth",)
@@ -149,10 +151,37 @@ AVAILABLE_EFFECTS = (True, True, None, None, None, False, False)
 
 # One of these names is chosen if the user enters '' for a name
 NULL_NAMES = ("Nada", "Nothing", "Null", "Zilch", "Naught", "Fred", "Bob",
-              "Kat", "Spode", "Ogg", "Mabel", "Arthur", "Trevor")
+              "Kat", "Spode", "Ogg", "Mabel", "Arthur", "Trevor", "Ryan",
+              "Batman", "Loki", "Fruegon Arcanegrin", "Cyril", "Rachel",
+              "Horace", "Esmeralda the Pirate Cabbage", "Griselda", "Pen")
 
 # List of three options users can choose from when choosing character traits
 VALID_STATS = {"g": "good", "b": "bad", "m": "meh"}
 
 # Valid route choices during the game
 FOREST_ROUTES = {"1": "main road", "2": "fens"}
+
+# Messages printed at the start and end of battles
+FOREST_OUTSKIRTS_ENCOUNTER = [
+    ["It seems the dental theme isn't confined to the town... ", ''],
+    ["interesting...", "\n"]
+    ]
+
+FOREST_ENCOUNTER_MESSAGE = [[
+    ["'You've done well to get this far. ", ''],
+    ["Pity for you it's pointless.'", '\n'],
+    ["\n'Things have been set in motion that you cannot stop.'", '\n']
+    ], [
+    ["'I'm just an underling... I don't know anything...'", '\n'],
+    ["\n'Try heading to the watchtower in the hills... heh...'", '\n']
+    ]]
+
+TOWER_ENCOUNTER_MESSAGE = [[
+    ["'Who dares approach with fluoridated water?!'", '\n'],
+    ["\n'I've come to find answers. Please could I have them?'", '\n'],
+    ["\n'Answers? HAH! You won't find any here. ", ''],
+    ["I'll deal with you myself, presumptious little upstart.'", '\n']
+    ], [
+    ["Your enemy glares at you even in death. ", ''],
+    ["They refused to divulge any information...", '\n']
+    ]]

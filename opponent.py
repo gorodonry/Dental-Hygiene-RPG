@@ -56,10 +56,10 @@ class Opponent:
         Evolve refers to either adding a new attack (default), or increasing
         attack damage slightly if arsenal is full.
 
-        return (str/bool): False if arsenal was full before evolution, else
-            the newly added attack.
+        return (str/bool): False if arsenal was full before evolution, else the
+            newly added attack.
         """
-        if len(self.attacks) == 7:
+        if len(self.attacks) == len(SPECIFIC_MOB_ATTACKS.keys()):
             self.extra_damage += 1
             return False
         else:

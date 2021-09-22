@@ -63,15 +63,19 @@ def gust():
     sleep(2)
 
 
-def battle(stage, player, start=None):
+def battle(stage, player, start=None, msg=None, end_msg=None, name=False):
     """
     Plays out a battle between the user and a random computer opponent.
 
     param stage (int): determines the possible level of the opponents.
     param player (object): contains all information about the user.
     param start (str): default is None, if set determines who strikes first.
+    param msg (list): message printed before the battle starts.
+    param end_msg (list): message printed after the battle if the user wins.
+    param name (bool): returns the name of the enemy if set to True.
 
-    return user (object): all information about the user following the battle.
+    return user (object)[, name (str)]: all information about the user
+        following the battle[, name of the monster they just fought].
     """
     # Variables used in random events are declared global
     global user, enemy, turn
@@ -80,6 +84,12 @@ def battle(stage, player, start=None):
         turn = random.choice(["user", "computer"])
     else:
         turn = start
+    if msg is not None:
+        print_slow(f"\nThe {enemy.name} is saying something...")
+        print()
+        for line in msg:
+            print_slow(line[0], line[1])
+        sleep(2)
     random_event = False
     # Loop until one or the other of the combatants is defeated
     while enemy.get_status() and user.get_status():
@@ -103,6 +113,7 @@ Your health: {user.health}""", '\n\n')
                 base = ceil(BASE * 1.5) + user.extra_damage
                 damage = random.randint(base - 1, base + 4)
                 damage = ceil(damage / user.damage_adjust)
+                damage = 0 if damage < 0 else damage
                 # 10% chance for critical if sensible attack
                 critical = random.randint(0, 100) > 90
                 if critical:
@@ -117,6 +128,7 @@ It's super effective [{damage} damage]!""")
                 base = ceil(BASE / 1.5) + user.extra_damage
                 damage = random.randint(base - 4, base + 1)
                 damage = ceil(damage / user.damage_adjust)
+                damage = 0 if damage < 0 else damage
                 print_slow(f"""
 It isn't very effective [{damage} damage]... maybe not the right attack..?""")
             else:
@@ -124,6 +136,7 @@ It isn't very effective [{damage} damage]... maybe not the right attack..?""")
                 base = BASE + user.extra_damage
                 damage = random.randint(base - 2, base + 2)
                 damage = ceil(damage / user.damage_adjust)
+                damage = 0 if damage < 0 else damage
                 print_slow(f"""
 The {enemy.name} manages to shake it off [{damage} damage]. Hmmm...""")
             enemy.take_damage(damage)
@@ -143,21 +156,24 @@ The {enemy.name} manages to shake it off [{damage} damage]. Hmmm...""")
                 # If user is neutral to the attack
                 base = BASE + enemy.extra_damage
                 damage = random.randint(base - 2, base + 2)
-                damage = ceil(damage / enemy.damage_adjust)
+                damage = ceil(damage / enemy.damage_adjust) - user.defence
+                damage = 0 if damage < 0 else damage
                 print_slow(f"""
 You manage to shake it off [{damage} damage].""")
             elif effect is True:
                 # If the attack is effective against the user
                 base = ceil(BASE * 1.5) + enemy.extra_damage
                 damage = random.randint(base - 1, base + 4)
-                damage = ceil(damage / enemy.damage_adjust)
+                damage = ceil(damage / enemy.damage_adjust) - user.defence
+                damage = 0 if damage < 0 else damage
                 print_slow(f"""
 It's super effective [{damage} damage]! Ouch ouch ouch...""")
             else:
                 # If the attack is weak against the user
                 base = ceil(BASE / 1.5) + enemy.extra_damage
                 damage = random.randint(base - 4, base + 1)
-                damage = ceil(damage / enemy.damage_adjust)
+                damage = ceil(damage / enemy.damage_adjust) - user.defence
+                damage = 0 if damage < 0 else damage
                 print_slow(f"""
 It isn't very effective [{damage} damage]. Take that, {enemy.name}!""")
             user.take_damage(damage)
@@ -171,11 +187,18 @@ It isn't very effective [{damage} damage]. Take that, {enemy.name}!""")
     if user.get_status():
         print_slow("Victory!")
         print_slow(BATTLE_END_MESSAGES[enemy.name])
+        if end_msg is not None:
+            print()
+            for line in end_msg:
+                print_slow(line[0], line[1])
+            sleep(2)
         user.heal_full()
         print_slow("""
 Following the battle you spend a couple of minutes with an electric toothbrush,
 thoroughly cleaning your teeth (restoration to max health).""")
     else:
         print_slow("You died...")
+    if name:
+        return enemy.name
 
 RANDOM_EVENTS = (evolve_monster, compromise_attack, find_toothbrush, gust)

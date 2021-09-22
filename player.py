@@ -139,9 +139,12 @@ class Player:
 
         self.extra_damage = 0
         self.damage_adjust = 1
+        self.defence = 0
 
         # During a battle, attacks can stop working due to a random event
         self.compromised_attacks = []
+
+        self.level = 1
 
     def add_attack(self, attack):
         """Adds a new attack to the player's arsenal."""
@@ -264,3 +267,18 @@ You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
     def increase_attack_damage(self, amount):
         """Increases attack damage by specified amount."""
         self.extra_damage += amount
+
+    def increase_defence(self, amount):
+        """Increases defence by specified amount."""
+        self.defence += amount
+
+    def level_up(self):
+        """Levels the user up."""
+        print("\n--LEVEL UP--")
+        self.level += 1
+        print_slow(f"You've reached level {self.level}!")
+        self.increase_max_health(15)
+        self.heal_full()
+        self.increase_attack_damage(2)
+        print_slow("Increased attack damage (by 2) and health (by 15).")
+        print("------------")
