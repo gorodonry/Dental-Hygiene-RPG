@@ -5,6 +5,7 @@
 # Contains options for printing lines slowly
 
 from time import sleep
+import sys
 
 
 def print_slow(message, newline='\n', gap=0.015, wait=1.5):
@@ -18,3 +19,8 @@ def print_slow(message, newline='\n', gap=0.015, wait=1.5):
         sleep(gap)
     print(end=newline)
     sleep(wait)
+
+
+def print_red(message):
+    """Prints a line of text in red."""
+    sys.stderr.write(message + '\n')

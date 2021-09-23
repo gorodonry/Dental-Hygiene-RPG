@@ -4,16 +4,29 @@
 # Author: Ryan Gordon
 # Contains all the constants for the dental hygiene RPG
 
-# Dictionary of opponents (excl. the final boss), their base health, and level
-OPPONENTS = {"Plaque Monster": (55, 2),
-             "Holey Tooth": (35, 1),
-             "Rotten Tooth": (45, 2),
-             "Chipped Tooth": (30, 1),
-             "Sugarholic Teeth": (65, 3),
-             "Candy Corn": (35, 1),
-             "L&P": (25, 1)}
+import battle_functions as fn
 
-BOSSES = {"Bottle of coke": [80]}
+# Dictionary of opponents (excl. bosses), their base health, level, defence
+OPPONENTS = {"Plaque Monster": (55, 2, 0),
+             "Holey Tooth": (35, 1, 0),
+             "Rotten Tooth": (45, 2, 0),
+             "Chipped Tooth": (30, 1, 0),
+             "Sugarholic Teeth": (65, 3, 0),
+             "Candy Corn": (35, 1, 0),
+             "L&P": (25, 1, 0)}
+
+# Individual boss attacks, strengths, weaknesses, and random events
+COKE_ATK = ("coke", "sugar", "plaque", "gum disease", "bad breath",
+            "bad brushing schedule")
+COKE_WK = ("toothpaste", "fluoridated water", "dental floss")
+COKE_STR = ("scaler", "drill")
+COKE_MSG = (fn.coke_start, fn.coke_end)
+COKE_EVNT = (fn.fizz, fn.pressure_release, fn.dissolve_weapon)
+
+COKE = (80, 4, 3, COKE_ATK, COKE_WK, COKE_STR, COKE_MSG, COKE_EVNT)
+
+# Name: (health, level, defence, attacks, weaknesses, strengths)
+BOSSES = {"Bottle of Coke": COKE}
 
 # Dictionary of which level monsters can occur at which stages
 STAGES = {1: (1,), 2: (1, 2), 3: (2,), 4: (2, 3), 5: (3,)}
@@ -34,7 +47,8 @@ SPECIFIC_MOB_ATTACKS = {"bad brushing schedule": BAD_BRUSHING_SCHEDULE,
                         "candy corn": CANDY_CORN,
                         "sugar": SUGAR,
                         "gum disease": GUM_DISEASE,
-                        "toffee": TOFFEE}
+                        "toffee": TOFFEE,
+                        "coke": ()}
 
 # Information about the effect of certain user attacks, .split() at asterisks
 ATTACK_HELP = {"blended kale": """
@@ -89,6 +103,9 @@ It looks like your enemy hasn't been brushing for a while and are turning their
 build-up of food on you.""",
                    "toffee": """
 A spirited attempt to break your teeth with solid food...""",
+                   "coke": """
+Words fail you when you ponder this 'drink'. They used to make it with cocaine.
+It literally rots your innards along with your teeth.""",
                    "blended kale": """
 You chuck something healthy at them - far better than what they're eating!""",
                    "scaler": """
@@ -143,11 +160,15 @@ STRENGTHS = {"blended kale": ("Rotten Tooth", "Sugarholic Teeth"),
              "fluoridated water": (),
              "dental pamphlet": ("Plaque Monster",)}
 
+# Random events that can occur during battles
+RANDOM_EVENTS = (fn.evolve_monster, fn.compromise_attack, fn.find_toothbrush,
+                 fn.gust)
+
 # For both the user and the computer opponent
 BASE_DAMAGE = 10
 
 # List of possible attack effectiveness used in character creation
-AVAILABLE_EFFECTS = (True, True, None, None, None, False, False)
+AVAILABLE_EFFECTS = (True, True, None, None, None, None, False, False)
 
 # One of these names is chosen if the user enters '' for a name
 NULL_NAMES = ("Nada", "Nothing", "Null", "Zilch", "Naught", "Fred", "Bob",
@@ -161,27 +182,27 @@ VALID_STATS = {"g": "good", "b": "bad", "m": "meh"}
 # Valid route choices during the game
 FOREST_ROUTES = {"1": "main road", "2": "fens"}
 
-# Messages printed at the start and end of battles
-FOREST_OUTSKIRTS_ENCOUNTER = [
-    ["It seems the dental theme isn't confined to the town... ", ''],
-    ["interesting...", "\n"]
-    ]
+# Messages printed at the start and end of some specific battles
+FOREST_OUTSKIRTS_ENCOUNTER = (
+    ("It seems the dental theme isn't confined to the town... ", ''),
+    ("interesting...", "\n")
+    )
 
-FOREST_ENCOUNTER_MESSAGE = [[
-    ["'You've done well to get this far. ", ''],
-    ["Pity for you it's pointless.'", '\n'],
-    ["\n'Things have been set in motion that you cannot stop.'", '\n']
-    ], [
-    ["'I'm just an underling... I don't know anything...'", '\n'],
-    ["\n'Try heading to the watchtower in the hills... heh...'", '\n']
-    ]]
+FOREST_ENCOUNTER_MESSAGE = ((
+    ("'You've done well to get this far. ", ''),
+    ("Pity for you it's pointless.", '\n'),
+    ("\n'Things have been set in motion that you cannot stop.'", '\n')
+    ), (
+    ("'I'm just an underling... I don't know anything...", '\n'),
+    ("\n'Try heading to the watchtower in the hills... heh...'", '\n')
+    ))
 
-TOWER_ENCOUNTER_MESSAGE = [[
-    ["'Who dares approach with fluoridated water?!'", '\n'],
-    ["\n'I've come to find answers. Please could I have them?'", '\n'],
-    ["\n'Answers? HAH! You won't find any here. ", ''],
-    ["I'll deal with you myself, presumptious little upstart.'", '\n']
-    ], [
-    ["Your enemy glares at you even in death. ", ''],
-    ["They refused to divulge any information...", '\n']
-    ]]
+TOWER_ENCOUNTER_MESSAGE = ((
+    ("'Who dares approach with fluoridated water?!'", '\n'),
+    ("\n'I've come to find answers. Please could I have them?'", '\n'),
+    ("\n'Answers? HAH! You won't find any here. ", ''),
+    ("I'll deal with you myself, presumptious little upstart.'", '\n')
+    ), (
+    ("Your enemy glares at you even in death. ", ''),
+    ("They refused to divulge anything...", '\n')
+    ))

@@ -7,7 +7,7 @@
 import random
 from math import ceil
 from time import sleep
-from print_options import print_slow
+from print_options import print_slow, print_red
 from constants import VALID_STATS, NULL_NAMES, AVAILABLE_EFFECTS, OPPONENTS, \
      SPECIFIC_MOB_ATTACKS, WEAKNESSES, ATTACK_HELP
 import sys
@@ -62,7 +62,7 @@ def print_attacks(attacks, compromised):
         if attack not in compromised:
             print(f"({option + 1}) {attack}")
         else:
-            sys.stderr.write(f"({option + 1}) {attack}\n")
+            print_red(f"({option + 1}) {attack}")
     # Typing help or the corresponding number gives information on attacks
     print(f"({option + 2}) help")
     return option
@@ -218,6 +218,17 @@ You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
                 print("You reach for it but it isn't working...")
         return attack
 
+    def delete_attack(attack=None):
+        """Deletes an existing attack from the player's arsenal."""
+        if len(self.attacks) == 1:
+            return False
+        elif attack is None:
+            attack = random.choice(self.attacks)
+            self.attacks.remove(attack)
+            return attack
+        else:
+            self.attacks.remove(attack)
+
     def compromise(self, attack=None):
         """Adds an attack to the compromised attacks list."""
         # Compromise either a specified or a random attack
@@ -268,12 +279,21 @@ You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
         """Increases attack damage by specified amount."""
         self.extra_damage += amount
 
+    def decrease_attack_damage(self, amount):
+        """Decreases attack damage by specified amount."""
+        if self.extra_damage - amount < 0:
+            self.adjust_damage(1)
+            return False
+        else:
+            self.extra_damage -= amount
+            return True
+
     def increase_defence(self, amount):
         """Increases defence by specified amount."""
         self.defence += amount
 
     def level_up(self):
-        """Levels the user up."""
+        """Levels the user up and gives stats a subsequent boost."""
         print("\n--LEVEL UP--")
         self.level += 1
         print_slow(f"You've reached level {self.level}!")
