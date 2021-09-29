@@ -5,7 +5,6 @@
 # Contains the boss class for the dental RPG and relevant functions
 
 import random
-from print_options import print_slow
 from constants import BOSSES, SPECIFIC_MOB_ATTACKS
 
 

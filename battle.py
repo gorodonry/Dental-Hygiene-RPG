@@ -12,7 +12,6 @@ from boss import Boss
 from print_options import print_slow, print_red
 from constants import STRENGTHS, BATTLE_END_MESSAGES, BASE_DAMAGE as BASE, \
      WEAKNESSES, ATTACK_MESSAGES, RANDOM_EVENTS
-import sys
 
 
 def battle(plr, lvl=None, strt=None, msg=None, end=None, nam=False, bos=False):
