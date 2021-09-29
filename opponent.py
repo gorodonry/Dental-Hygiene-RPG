@@ -82,7 +82,7 @@ class Opponent:
         return (str/bool): False if arsenal was full before evolution, else the
             newly added attack.
         """
-        if len(self.attacks) == len(SPECIFIC_MOB_ATTACKS.keys()):
+        if len(self.attacks) == len(SPECIFIC_MOB_ATTACKS.keys()) - 1:
             self.increase_attack_damage(1)
             return False
         else:

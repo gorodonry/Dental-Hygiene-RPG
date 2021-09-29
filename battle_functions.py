@@ -87,9 +87,9 @@ the fundamental rules of existence. """, '', wait=0.015)
 
 def coke_end():
     """Message printed after defeating the coke boss."""
-    print_slow("'Not possible...'", gap=0.2)
+    print_slow("'Not possible...", gap=0.2)
     print_slow("\n'You're all so addicted to sugar... ", '')
-    print_slow("it should've been easy...'")
+    print_slow("it should've been easy...")
     print_slow("\n'I...' *blerrr*")
 
 

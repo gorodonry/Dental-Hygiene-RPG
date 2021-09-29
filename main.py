@@ -2,7 +2,7 @@
 # main.py
 # Date: 08/09/2021
 # Author: Ryan Gordon
-# Plays as PRG game with the user as a dentist, promotes good dental hygiene
+# Plays an PRG game with the user as a dentist, promotes good dental hygiene
 
 import random
 from time import sleep
@@ -104,7 +104,7 @@ By midafternoon you can see the forest, your destination easily in sight.""")
     print_slow("\nA little way into the forest you come to a small township.")
     print_slow("\nThe folk about seem restless. ", '')
     print_slow("Understandable given the state of the kingdom.")
-    print_slow("\nOne in particular seems to be trying to catch your eye.")
+    print_slow("\nOne in particular seems to be trying to catch your eye")
     print_slow("(1) go over to them")
     print_slow("(2) ignore them, they are beneath you")
     choice = input("What do you do? ")
@@ -183,7 +183,8 @@ Evidently the {mob} was well up in the hierachy of these dental monsters.""")
 The note is signed - presumably by the one behind it all! You make a note of it
 before setting off.""")
     print_slow("\nCoca-Cola", '', gap=0.5, wait=0.015)
-    print_slow(". That's interesting...")
+    print_slow(". ")
+    print_slow("That's interesting...")
     print_slow("\nYou set off back to the capital. Time for this to end.")
     user.level_up()
 
@@ -245,18 +246,22 @@ all over the place about a great evil, which obviously was external.""")
     print_slow("\n'We would be honoured if you join our guild.'")
     print_slow("(1) Join")
     print_slow("(2) You used me! I don't want to join you")
+    print_slow("(3) Wait... what others?")
     join = input("What do you do? ")
     if join in ("1", "join"):
         print_slow("\nYou join the guild...")
     elif join == "2":
         print_slow("You storm out through the door you came in - ", '')
         print_slow("the same door past aeons of heroes walked through...", '')
-        print_slow("\nand head off to become your own hero...")
+        print_slow("and head off to become your own hero...")
+    elif join == "3":
+        print_slow("'Don't worry about it.")
+        print_slow("'Just sign here please...'")
     else:
         print_slow("\nYou do you. No need to conform this time :)")
     sleep(5)
     print_slow("\n\nTHE END", gap=0.2)
-    print_slow("\nMoral of the story: ")
+    print_slow("\nMoral of the story: ", '')
     print_red("UserDoesntWantAMoralError: look after your teeth")
 
 

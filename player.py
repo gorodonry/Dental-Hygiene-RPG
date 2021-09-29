@@ -9,7 +9,7 @@ from math import ceil
 from time import sleep
 from print_options import print_slow, print_red
 from constants import VALID_STATS, NULL_NAMES, AVAILABLE_EFFECTS, OPPONENTS, \
-     SPECIFIC_MOB_ATTACKS, WEAKNESSES, ATTACK_HELP
+     SPECIFIC_MOB_ATTACKS, WEAKNESSES, ATTACK_HELP, BASE_DAMAGE
 import sys
 
 
@@ -100,15 +100,6 @@ class Player:
         teeth_strength = get_stat(prompt, list(self.stats.values()))
         self.stats["teeth strength"] = teeth_strength
 
-        print_slow("\nThank you. ", '')
-        print_slow("But this is just writing. ", '')
-        print_slow("Prior to joining you must undergo a series of tests.")
-        print()
-        print_slow("The assessor shows you another door and steps back. ", '')
-        print_slow("You open it...")
-
-        # End of character creation messages, create any remaining user vars
-
         # Use the traits to psuedo-randomly determine attack effectiveness
         effects, self.affected_by = list(AVAILABLE_EFFECTS), {}
         attacks = list(SPECIFIC_MOB_ATTACKS.keys())
@@ -145,6 +136,16 @@ class Player:
         self.compromised_attacks = []
 
         self.level = 1
+
+        # Print game situation and stats of resultant character
+        self.print_stats()
+
+        print_slow("\nThank you. ", '')
+        print_slow("But this is just writing. ", '')
+        print_slow("Prior to joining you must undergo a series of tests.")
+        print()
+        print_slow("The assessor shows you another door and steps back. ", '')
+        print_slow("You open it...")
 
     def add_attack(self, attack):
         """Adds a new attack to the player's arsenal."""
@@ -218,7 +219,7 @@ You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
                 print("You reach for it but it isn't working...")
         return attack
 
-    def delete_attack(attack=None):
+    def delete_attack(self, attack=None):
         """Deletes an existing attack from the player's arsenal."""
         if len(self.attacks) == 1:
             return False
@@ -292,6 +293,28 @@ You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
         """Increases defence by specified amount."""
         self.defence += amount
 
+    def print_stats(self, level_up=False):
+        """Prints out all user stats in a nice fashion."""
+        if not level_up:
+            print_slow("\n--Your character--")
+        else:
+            print_slow("Your enhanced stats")
+        print_slow(f"{self.name} (level {self.level})")
+        print_slow(f"""
+Attack damage: {BASE_DAMAGE + self.extra_damage}""", wait=0.015)
+        print_slow(f"Defence: {self.defence}", wait=0.015)
+        print_slow(f"Max health: {self.max_health}")
+        strong_against, weak_against = [], []
+        for attack in self.affected_by:
+            if self.affected_by[attack] is False:
+                strong_against.append(attack)
+            elif self.affected_by[attack] is True:
+                weak_against.append(attack)
+        print_slow(f"""
+Strong against: {', '.join(strong_against)}""", wait=0.015)
+        print_slow(f"Weak against: {', '.join(weak_against)}")
+        print(f"------------{'------' if not level_up else ''}")
+
     def level_up(self):
         """Levels the user up and gives stats a subsequent boost."""
         print("\n--LEVEL UP--")
@@ -301,4 +324,5 @@ You stow your handbook and apologise to the monster. 'Ok I'm ready now...'""")
         self.heal_full()
         self.increase_attack_damage(2)
         print_slow("Increased attack damage (by 2) and health (by 15).")
-        print("------------")
+        print()
+        self.print_stats(True)
