@@ -16,14 +16,15 @@ OPPONENTS = {"Plaque Monster": (55, 2, 0),
              "L&P": (25, 1, 0)}
 
 # Individual boss attacks, strengths, weaknesses, and random events
-COKE_ATK = ("coke", "sugar", "plaque", "gum disease", "bad breath",
+CKE_ATK = ("coke", "sugar", "plaque", "gum disease", "bad breath",
             "bad brushing schedule")
-COKE_WK = ("toothpaste", "fluoridated water", "dental floss")
-COKE_STR = ("scaler", "drill")
-COKE_MSG = (fn.coke_start, fn.coke_end)
-COKE_EVNT = (fn.fizz, fn.pressure_release, fn.dissolve_weapon)
+CKE_WK = ("toothpaste", "fluoridated water", "dental floss")
+CKE_STR = ("scaler", "drill")
+CKE_MSG = (fn.coke_start, fn.coke_end)
+CKE_S_EVNT = (fn.fizz, fn.dissolve_weapon)
+CKE_L_EVNT = (fn.pressure_release,)
 
-COKE = (80, 4, 3, COKE_ATK, COKE_WK, COKE_STR, COKE_MSG, COKE_EVNT)
+COKE = (80, 4, 3, CKE_ATK, CKE_WK, CKE_STR, CKE_MSG, CKE_S_EVNT, CKE_L_EVNT)
 
 # Name: (health, level, defence, attacks, weaknesses, strengths)
 BOSSES = {"Bottle of Coke": COKE}

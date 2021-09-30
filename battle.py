@@ -37,7 +37,7 @@ def battle(plr, lvl=None, strt=None, msg=None, end=None, nam=False, bos=False):
         enemy, random_events = Opponent(lvl), RANDOM_EVENTS
     else:
         enemy = Boss(bos)
-        random_events = RANDOM_EVENTS + enemy.events
+        random_events = RANDOM_EVENTS + enemy.start_events
     if strt is None:
         turn = random.choice(["user", "computer"])
     else:
@@ -112,6 +112,12 @@ The {enemy.name} manages to shake it off [{damage} damage]. Hmmm...""")
             # Reset temporary effects from random events
             user.uncompromise_all_attacks()
             user.reset_damage_adjust()
+            # Add any boss specific random events that have to occur later
+            if bos:
+                # The set avoids duplicates
+                random_events = set(random_events)
+                random_events.update(enemy.later_events)
+                random_events = list(random_events)
         else:
             # Opponent turn
             print_slow(f"{enemy.name}'s turn...")

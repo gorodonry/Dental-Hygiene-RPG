@@ -35,7 +35,8 @@ class Boss:
         self.weaknesses = BOSSES[self.name][4]
         self.strengths = BOSSES[self.name][5]
 
-        self.events = BOSSES[self.name][7]
+        self.start_events = BOSSES[self.name][7]
+        self.later_events = BOSSES[self.name][8]
 
         self.extra_damage = 1
         self.damage_adjust = 1
