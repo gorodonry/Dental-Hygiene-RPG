@@ -5,3 +5,6 @@ The kingdom is in turmoil – dental aberrations are running amok! Nobody quite 
 
 **Further Information**
 Gameplay is intuitive and entertaining, choices are usually multichoice with set responses. You start off as a low level character with a few weapons - acquire more and level up throughout the game. Fight monsters along the way - different attacks are effective against different monsters - see if you can work out which ones and why!
+
+**Side Note**
+This was created primarily as a response to an L2 NCEA assessment.
